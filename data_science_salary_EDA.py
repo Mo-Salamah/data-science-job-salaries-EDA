@@ -31,14 +31,36 @@ import seaborn as sns
 #           S less than 50 employees (small) M 50 to 250 employees (medium) L more than 250
 #           employees (large)
 
-
+#%%
 salary = pd.read_csv('ds_salaries.csv')
 
-
-salary.head()
-salary.drop(['Unnamed: 0'], axis=1, inplace=True)
+#----------------------------------------------------------------
+# Data Cleaning
+#----------------------------------------------------------------
+#%%
+# salary.head()
+salary.drop(columns=['Unnamed: 0'], axis=1, inplace=True)
 
 #%% 
+salary.info()
+
+#%% 
+# changing type of categorical columns
+salary['work_year'] = pd.Categorical(salary['work_year'].astype(str), categories=['2020', '2021', '2022'], ordered=True)
+salary['experience_level'] = pd.Categorical(salary['experience_level'], categories=['EN', 'MI', 'SE', 'EX'], ordered=True)
+salary['employment_type'] = pd.Categorical(salary['employment_type'], categories=['FL', 'CT', 'PT', 'FT'], ordered=True)
+salary['job_title'] = pd.Categorical(salary['job_title'], categories=pd.Series(salary.job_title.value_counts().index), ordered=False)
+salary['salary_currency'] = salary['salary_currency'].astype('category')
+salary['employee_residence'] = pd.Categorical(salary['employee_residence'].astype('category'))
+salary['remote_ratio'] = pd.Categorical(salary['remote_ratio'].astype(str), categories=['0', '50', '100'], ordered=True)
+salary['company_location'] = salary['company_location'].astype('category')
+salary['company_size'] = pd.Categorical(salary['company_size'], categories=['S', 'M', 'L'], ordered=True)
+
+
+
+
+
+#%%
 salary.info()
 
 #%%
@@ -46,12 +68,18 @@ salary.describe()
 
 #%%
 # drop duplicated rows
-salary.drop(salary.duplicated(), axis=0)
+salary.drop_duplicates(ignore_index=True, inplace=True)
+
+#%%
+salary.to_csv('ds_salaries_cleaned.csv')
 
 
-
-
-
+#----------------------------------------------------------------
+# Analysis
+#----------------------------------------------------------------
 
 
 # %%
+
+
+
